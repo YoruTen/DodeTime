@@ -41,7 +41,7 @@ Example:
 For this project I have chosen to work with the Wemos D1 mini device as seen in Fig. 1, it's a small device running MicroPython. It offers a few inputs and outputs that can be used for different purposes. I paired this with a battery sheild that will charge a LiPo battery. 
 
 
-| ![D1!](https://www.wemos.cc/en/latest/_static/boards/d1_mini_v3.1.0_1_16x16.jpg)| ![D1 Battery Shield](https://www.wemos.cc/en/latest/_images/battery_v1.3.0_1_16x16.jpg)|
+| ![D1!](https://www.wemos.cc/en/latest/_static/boards/d1_mini_v3.1.0_1_16x16.jpg =180x)| ![D1 Battery Shield](https://www.wemos.cc/en/latest/_images/battery_v1.3.0_1_16x16.jpg)|
 | -------- | -------- |
 | Fig.1. Wemos D1 mini without headers. www.wemos.cc     | Fig.2. Wemos D1 mini Battery Shield without headers. www.wemos.cc  |
 
