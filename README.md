@@ -41,7 +41,7 @@ Example:
 For this project I have chosen to work with the Wemos D1 mini device as seen in Fig. 1, it's a small device running MicroPython. It offers a few inputs and outputs that can be used for different purposes. I paired this with a battery sheild that will charge a LiPo battery. 
 
 
-| ![D1!](https://www.wemos.cc/en/latest/_static/boards/d1_mini_v3.1.0_1_16x16.jpg =180x)| ![D1 Battery Shield](https://www.wemos.cc/en/latest/_images/battery_v1.3.0_1_16x16.jpg)|
+| ![D1!](https://www.wemos.cc/en/latest/_static/boards/d1_mini_v3.1.0_1_16x16.jpg)| ![D1 Battery Shield](https://www.wemos.cc/en/latest/_images/battery_v1.3.0_1_16x16.jpg)|
 | -------- | -------- |
 | Fig.1. Wemos D1 mini without headers. www.wemos.cc     | Fig.2. Wemos D1 mini Battery Shield without headers. www.wemos.cc  |
 
@@ -82,9 +82,8 @@ ampy --port COM7 put main.py
 ampy --port COM7 put config.json
 ampy --port COM7 put lib\imu.py /lib/imu.py
 ampy --port COM7 put lib\beep.py /lib/beep.py
-ampy --port COM7 put lib\rgb_led.py /lib/rgb_led.py
 ampy --port COM7 put lib\Kalman.py /lib/Kalman.py
-ampy --port COM7 put lib\urequests_auth.py /lib/urequests_auth.py
+ampy --port COM7 put lib\urequests.py /lib/urequests.py
 ```
 #### MicroPython flashing
 The Wemos D1 mini should come flashed with micropython firmware. If the firmware have been changed or you need the lastest firmware, you can flash MicroPython firmware by yourself, see guide at [wemos.cc](https://www.wemos.cc/en/latest/tutorials/d1/get_started_with_micropython_d1.html).
@@ -118,146 +117,24 @@ For connecting the magnet to the battery shield a micro-USB was sourced from a o
 
 ### Platform
 
-At the moment [Ubidots](https://ubidots.com/) is used to gather the data, the only limit is the 10 sensors per device. Toggl time tracker was planned to be used but due to memory limititations of the esp8266 it was not possible to connect to their service.
+At the moment [Integromat](https://www.integromat.com/) is used as a middle hand with the use of webhooks that allows for the DodeTime to send data (Toggl project ID), Integromat then uses the Toggle api to start a timer for the project corresponding to the current side. Toggl time tracker was planned to be used directly but due to memory limititations of the esp8266 it was not possible to connect to their service. The image below shows the senario constructed for this, I've not bee able to export it.
 
-Ubidots have several differnet protocals for recivning data, HTTP, MQTT, ect.
-Ubidots also offer dashbords that can be configerd to show the recived data in multiple differnt ways.
-
+![Integromat scenario](https://i.imgur.com/6Kk8R6P.png)
 
 ### The code
 
-Here is the main code, all libraries are avilable on [GitHub](https://github.com/YoruTen/DodeTime).
-
-
-```python=
-import imu
-import beep
-from network import WLAN
-import urequests_auth as requests
-import machine
-import time
-import json
-import rgb_led
-
-with open('config.json') as config_file: #Imports configs
-    conf = json.load(config_file)
-#defines variables
-UBI_TOKEN = conf['UBI_TOKEN']
-TOG_TOKEN = conf['TOG_TOKEN']
-beep_pin = conf['BEEP_PIN']
-sides= conf['SIDES']
-device = conf['DEVICE']
-DELAY = conf['DELAY']  # Delay in seconds
-alarm = ("G4","A3",0,"G4","A3",0,"G4","A3",0,"G4","A7",0,)
-TOGGL_API = "https://www.toggl.com/api/v8/"
-tog_auth=(TOG_TOKEN,"api_token")
-
-def angle(): #function for getting angle
-     kAx,kAy = imu.read_angle()
-     return (kAx,kAy)
-
-def sound(note):
-    buz=beep_pin
-    beep.beep(buz, note)
-    pass
-
-# Builds the json to send the request # Based on https://help.ubidots.com/en/articles/961994-connect-any-pycom-board-to-ubidots-using-wi-fi-over-http
-def build_json(value1, key_value):
-    try:
-        data = {key_value: {"value": value1}}
-        return data
-    except:
-        prin("Could not build JSON")
-        return None
-
-# Sends the request. Please reference the REST API reference https://ubidots.com/docs/api/
-def post_var(device, value1, key_value):
-    try:
-        url = "https://things.ubidots.com/"
-        url = url + "api/v1.6/devices/" + device
-        headers = {"X-Auth-Token": UBI_TOKEN, "Content-Type": "application/json"}
-        data = build_json(key_value, value1)
-        if data is not None:
-            print(data)
-            req = requests.post(url=url, headers=headers, json=data)
-            req.close()
-            pass
-        else:
-            print("Failed to send data")
-            pass
-    except:
-        pass
-
-#Tests if the angle  corresponds to defined intevals
-def check_interval(kAx, kAy, PrevState):
-    for key in sides:
-        #Check in which interval the angle fits
-        #Build interval
-        T_kAx = (sides[key]["kAx"]-10,sides[key]["kAx"]+10)
-        T_kAy = (sides[key]["kAy"]-10,sides[key]["kAy"]+10)
-        # print(T_kAx, T_kAy)
-
-        if (T_kAx[0] < kAx < T_kAx[1]) and (T_kAy[0] < kAy < T_kAy[1]):
-            DodeState = key
-            return DodeState
-
-def main_prog():
-    PrevState = "Side0"
-    timer=time.time()
-    while True:
-        # try:
-        kAx, kAy = angle()
-        DodeState = check_interval(kAx, kAy, PrevState)
-        if DodeState is None:
-            print("Side not defined", kAx, kAy)
-            pass
-        elif DodeState == PrevState:
-            #If the side has not changed
-            print("State is the same: ", DodeState)
-            dt=time.time()-timer
-            pomtime = sides[DodeState]["Timer"]*60
-            if type(pomtime) == str:
-                 pass
-            elif dt >= pomtime: #If the elapsed time is greater than the set time the alarm sounds
-                beep.beep(beep_pin,alarm)
-                g=1
-                while g != 4:
-                    rgb_led.setColor([255,0,0],1) #Flashes LED red
-                    time.sleep(1)
-                    g += 1
-                pass
-            pass
-        elif DodeState != PrevState:
-            print("State is not same, new side: ", DodeState)
-            dt=time.time()-timer
-            if DodeState == "Side0": #If the side is the charging side nothing is done
-                pass
-            else:#Sends the previous side and the elapsed time
-                post_var(device ,dt, sides[PrevState]["Activity"]) 
-                pass
-            rgb_led.setColor(sides[DodeState]["Color"],DELAY) #Flashes LED for 10 s in project color
-            PrevState = DodeState
-            timer=time.time() #Sets new time to compare
-            pass
-        time.sleep(DELAY) #Waits for the time of DELAY before checking if the side has changed
-    pass
-main_prog() #Starts the main program
-
-```
-
+The main code, all libraries are avilable on [GitHub](https://github.com/YoruTen/DodeTime).
 
 
 ### Transmitting the data / connectivity
 
 The data is sent everytime it detects that the DodeTime hase been placed on a new side, the orientation is checked every 5 seconds.
-It send data over WiFi using HTTP requests.
+It send data over WiFi using HTTP request to the Integromat webhook.
 
 
 ### Presenting the data
 
-The data sent to Ubidots contain the seconds and the task of the previous side. Data is saved everytime it's sent, with a limit of 4000 times per day.
-
-![Pie Chart](https://i.imgur.com/Wfqjuhl.png)
+Toggl is a service for time tracking and has several ways in which it presents tha data, you can also export the data and present how ever you like.
 
 
 ### Finalizing the design
