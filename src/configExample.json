@@ -1,0 +1,106 @@
+{
+    "INT_URL"   : "https://hook.integromat.com/xx69xx69",
+    "I2CSDA"    : 4,
+    "I2CSCL"    : 5,
+    "BEEP_PIN"  : 0,
+    "NEO_PIN"   : 15,
+    "NEO_NUM"   : 4,
+    "SIDES" : {
+      "Side0":{
+        "kAx": 1,
+        "kAy": -2,
+        "Activity": "Chargin",
+        "TOG_ID": "",
+        "Color":[255,0,0],
+        "Timer": ""
+      },
+      "Side1":{
+        "kAx": 33,
+        "kAy": -42,
+        "Activity": "Household",
+        "TOG_ID": 160390626,
+        "Color":[83, 200, 203],
+        "Timer": 25
+      },
+      "Side2":{
+        "kAx": 46,
+        "kAy": 15,
+        "Activity": "Media",
+        "TOG_ID": 157897219,
+        "Color":[241, 29, 211],
+        "Timer": 25
+      },
+      "Side3":{
+        "kAx": 2,
+        "kAy": 45,
+        "Activity": "Food",
+        "TOG_ID": 160127149,
+        "Color":[56, 1, 230],
+        "Timer": 25
+      },
+      "Side4":{
+        "kAx": -45,
+        "kAy": 15,
+        "Activity": "Study",
+        "TOG_ID": 161044887,
+        "Color":[22, 183, 74],
+        "Timer": 25
+      },
+      "Side5":{
+        "kAx": -32,
+        "kAy": -34,
+        "Activity": "Games",
+        "TOG_ID": 157043699,
+        "Color":[129, 32, 233],
+        "Timer": 60
+      },
+      "Side6":{
+        "kAx": 175,
+        "kAy": -96,
+        "Activity": "Work",
+        "TOG_ID": 161052370,
+        "Color":[107, 229, 37],
+        "Timer": 25
+      },
+      "Side7":{
+        "kAx": 97,
+        "kAy": -109,
+        "Activity": "Unplanned",
+        "TOG_ID": 160599833,
+        "Color":[117, 110, 84],
+        "Timer": 5
+      },
+      "Side8":{
+        "kAx": 100,
+        "kAy": 99,
+        "Activity": "Creative",
+        "TOG_ID": 161052354,
+        "Color":[209, 237, 10],
+        "Timer": 25
+      },
+      "Side9":{
+        "kAx": -100,
+        "kAy": 98,
+        "Activity": "Health",
+        "TOG_ID": 161052335,
+        "Color":[215, 97, 11],
+        "Timer": 25
+      },
+      "Side10":{
+        "kAx": -97,
+        "kAy": -108,
+        "Activity": "Pause",
+        "TOG_ID": 160599917,
+        "Color":[144, 63, 65],
+        "Timer": 10
+      },
+      "Side11":{
+        "kAx": 180,
+        "kAy": -176,
+        "Activity": "Volonteer",
+        "TOG_ID": 161052310,
+        "Color":[200, 245, 7],
+        "Timer": 25
+      }
+    }
+  }

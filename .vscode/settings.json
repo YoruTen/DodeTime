@@ -1,0 +1,19 @@
+{
+    "python.linting.enabled": true,
+    "python.jediEnabled": false,
+
+    // Loaded Stubs:  esp8266-micropython-1.11.0 
+    "python.autoComplete.extraPaths": ["C:\\Users\\Andreas Gustavsson\\Documents\\DodeTime\\DodeTime\\src\\lib",".micropy\\BradenM-micropy-stubs-e1fd1c1\\frozen", ".micropy\\BradenM-micropy-stubs-27ee48a\\frozen", ".micropy\\BradenM-micropy-stubs-e1fd1c1\\stubs", ".micropy\\DodeTime"],
+    "python.autoComplete.typeshedPaths":  [".micropy\\BradenM-micropy-stubs-e1fd1c1\\frozen", ".micropy\\BradenM-micropy-stubs-27ee48a\\frozen", ".micropy\\BradenM-micropy-stubs-e1fd1c1\\stubs", ".micropy\\DodeTime"],
+    "python.analysis.typeshedPaths":  [".micropy\\BradenM-micropy-stubs-e1fd1c1\\frozen", ".micropy\\BradenM-micropy-stubs-27ee48a\\frozen", ".micropy\\BradenM-micropy-stubs-e1fd1c1\\stubs", ".micropy\\DodeTime"],
+
+    "python.linting.pylintEnabled": true,
+    "python.languageServer": "Microsoft",
+    "python.analysis.extraPaths": [
+        ".micropy\\BradenM-micropy-stubs-e1fd1c1\\frozen",
+        ".micropy\\BradenM-micropy-stubs-27ee48a\\frozen",
+        ".micropy\\BradenM-micropy-stubs-e1fd1c1\\stubs",
+        ".micropy\\DodeTime"
+    ],
+    "python.pythonPath": "C:\\Python38\\python.exe"
+}
